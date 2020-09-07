@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="style.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="shortcut icon" href="favicon.png" type="image/png">
+	<title>Coef creater</title>
+</head>
+<body>
+	<form id="download-image" >
+		<input name="image" type="file">
+		<input type="submit" value="Загрузить">
+	</form>
+
+	<img id="redactor" hidden>
+	<div id="controls" hidden><button>Save</button></div>
+	<div id="parametrs" hidden>
+		<div><label for="coordinat-x">X: </label><input id="coordinat-x"></input><b>(px)</b><br></div>
+		<div><label for="coordinat-y">Y: </label><input id="coordinat-y"></input><b>(px)</b><br></div>
+		<div><label for="coordinat-u">U: </label><input id="coordinat-u"></input><b>(м) </b><br></div>
+		<div><label for="coordinat-v">V: </label><input id="coordinat-v"></input><b>(м) </b><br></div>
+		<div>
+			<button id="delete">Удалить</button>
+			<button id="cancel">Закрыть</button>
+		</div>
+	</div>
+	<div id="download-result" hidden>
+		<a download>Скачать JSON-файл с коэффициентами</a>
+	</div>
+	<script type="module"src="js/script.js"></script>
+</body>
+</html>
