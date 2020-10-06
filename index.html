@@ -8,13 +8,22 @@
 	<title>Coef creater</title>
 </head>
 <body>
-	<form id="download-image" >
-		<input name="image" type="file">
-		<input type="submit" value="Загрузить">
-	</form>
+	<div id="controls" hidden>
+		<select id="crossroads">
+			<option selected value="0">Своё изображение</option>
+			<option value="./images/comPol.png">Ост. поликлиника (Комсомольский проспект)</option>
+			<option value="./images/pobedaMolod.png">Перекрёсток проспекта Победы и ул. Молодогвардейцев</option>
+		</select>
 
-	<img id="redactor" hidden>
-	<div id="controls" hidden><button>Save</button></div>
+		<input id="image" type="file">
+		<button id="upload-image">Загрузить</button>
+		
+		<button hidden>Скачать результат</button>
+		<a  id="download-result" hidden download></a>
+	</div>
+
+	<img id="redactor">
+
 	<div id="parametrs" hidden>
 		<div><label for="coordinat-x">X: </label><input id="coordinat-x"></input><b>(px)</b><br></div>
 		<div><label for="coordinat-y">Y: </label><input id="coordinat-y"></input><b>(px)</b><br></div>
@@ -25,9 +34,7 @@
 			<button id="cancel">Закрыть</button>
 		</div>
 	</div>
-	<div id="download-result" hidden>
-		<a download>Скачать JSON-файл с коэффициентами</a>
-	</div>
+
 	<script type="module"src="js/script.js"></script>
 </body>
 </html>

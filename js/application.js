@@ -2,28 +2,44 @@ class Application
 {
 	constructor()
 	{
-		this.form = document.getElementById('download-image');
 		this.redactor = document.getElementById('redactor')
 		this.parametrs = document.getElementById('parametrs')
 		this.controls = document.getElementById('controls');
 		this.downloadResult = document.getElementById('download-result');
 
-		this.redactor.onclick = this.appendDot.bind(this)
 		this.imageURL = null;
-		this.form.onsubmit = this.uploadImage.bind(this);
+
 		this.debug = true;
 		this.movedDot = null;
 		this.dotForParametrs = null;
 		if (this.debug) console.log('create application');
+
 		this.dots = [];
 		window.addEventListener('resize', this.resize.bind(this));
-		window.onbeforeunload = () => { if (!this.redactor.hidden) return false;};
+		window.onbeforeunload = () => { if(this.dots.length !== 0) return false;};
 		document.oncontextmenu = function (){return false};
+		
+
+		this.coord = {
+			x: document.getElementById('coordinat-x'),
+			y: document.getElementById('coordinat-y'),
+			u: document.getElementById('coordinat-u'),
+			v: document.getElementById('coordinat-v'),	
+		}
+
+		if (this.debug) console.log(this.coord)
+
+		this.crossroads = document.getElementById('crossroads');
+
+		this.imageInput = document.getElementById('image')
+		this.imageUpload =document.getElementById('upload-image')
+
 		this.bindButtons();
 	}
 
 	bindButtons()
 	{
+		this.redactor.onclick = this.appendDot.bind(this)
 		document.getElementById('cancel').onclick = () => 
 		{
 			this.parametrs.hidden = true;
@@ -38,6 +54,27 @@ class Application
 		this.controls.firstElementChild.onclick = () => {console.log('!'), this.createFile() };
 		this.redactor.onmousemove = this.moveDot.bind(this);
 		this.redactor.onmouseup = this.endMoveDot.bind(this);
+
+		for (let key in this.coord) this.coord[key].onchange = (e) => {
+			if (this.dotForParametrs === null) return;
+			this.dotForParametrs.setAttribute('dot-' + key, e.target.value);
+		};
+
+		this.crossroads.onchange = (e) =>{
+			if (e.target.value == 0) 
+			{
+				this.imageInput.hidden = false;
+				this.imageUpload.hidden = false;
+				this.redactor.src = '';
+			}
+			else
+			{
+				this.imageInput.hidden = true;
+				this.imageUpload.hidden = true;
+				this.redactor.src = e.target.value;
+				this.resize();
+			}
+		}
 	}
 
 	uploadImage(event)
@@ -82,6 +119,8 @@ class Application
 		dot.style.top = pos.y + 'px';
 		dot.setAttribute('dot-x', pos.x);
 		dot.setAttribute('dot-y', pos.y);
+		dot.setAttribute('dot-u', '');
+		dot.setAttribute('dot-v', '');
 		// if (this.debug) {console.log('add dot', dot); console.dir(dot);}	
 		dot.onmousedown = (event) => 
 		{
@@ -90,6 +129,11 @@ class Application
 		};
 		dot.ondragstart = () => {return false;}
 		document.body.append(dot);
+	}
+
+	removeDot()
+	{
+		
 	}
 
 	appendDot(event)
@@ -140,24 +184,16 @@ class Application
 		this.parametrs.hidden = false;
 		this.parametrs.style.left = pos.x + 'px';
 		this.parametrs.style.top = pos.y + 'px';
-		document.getElementById('coordinat-x').value = pos.x;
-		document.getElementById('coordinat-y').value = pos.y;
-		document.getElementById('coordinat-u').value = 10;
-		document.getElementById('coordinat-v').value = 10;
+		this.coord.x.value = pos.x;
+		this.coord.y.value = pos.y;
+		this.coord.u.value = dot.getAttribute('dot-u');
+		this.coord.v.value = dot.getAttribute('dot-u');
 		return false;
 	}
 	get data()
 	{
-		let dots = [];
-		for (let dot of document.getElementsByClassName('dot'))
-		{
-			dots.push({
-				x: parseInt(dot.getAttribute('dot-x')), 
-				y: parseInt(dot.getAttribute('dot-y'))
-			});
-		}
-		console.log(dots);
-		return JSON.stringify(dots);
+		if (this.debug)	console.log(dots);
+		return JSON.stringify(this.dots);
 	}
 
 	createFile()
@@ -167,7 +203,7 @@ class Application
 		let file = new File([this.data], 'coef.json', {type: 'text'})
 		if (this.debug) console.log('create file', file);
 		this.downloadResult.hidden = false;
-		this.downloadResult.firstElementChild.href = URL.createObjectURL(file);
+		this.downloadResult.href = URL.createObjectURL(file);
 
 	}
 
